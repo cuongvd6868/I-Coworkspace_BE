@@ -9,7 +9,7 @@ namespace Domain.Entities
     {
         public int Id { get; set; }
         public int BookingId { get; set; }
-        public int UserId { get; set; }
+        public string UserId { get; set; }
         public int WorkSpaceRoomId { get; set; }
 
         [Range(1, 10)]
@@ -21,5 +21,8 @@ namespace Domain.Entities
 
         public bool IsVerified { get; set; } = false;
         public bool IsPublic { get; set; } = true;
+        public virtual Booking? Booking { get; set; }
+        public virtual AppUser? User { get; set; }
+        public virtual WorkSpaceRoom? WorkSpaceRoom { get; set; }
     }
 }

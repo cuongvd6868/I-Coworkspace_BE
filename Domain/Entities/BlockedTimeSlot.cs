@@ -6,7 +6,7 @@ using System.Text;
 
 namespace Domain.Entities
 {
-    internal class BlockedTimeSlot
+    public class BlockedTimeSlot
     {
         [Required]
         public int Id { get; set; }
@@ -19,5 +19,6 @@ namespace Domain.Entities
         public string? Reason { get; set; }
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public virtual WorkSpaceRoom? WorkSpaceRoom { get; set; }
     }
 }

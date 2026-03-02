@@ -20,9 +20,9 @@ namespace Domain.Entities
         public SupportTicketStatus Status { get; set; } = SupportTicketStatus.New;
 
         public string SubmittedByUserId { get; set; }
-        //public virtual AppUser SubmittedByUser { get; set; }
+        public virtual AppUser SubmittedByUser { get; set; }
 
-        public int? AssignedToStaffId { get; set; }
-        //public virtual AppUser? AssignedToStaff { get; set; }
+        public string? AssignedToStaffId { get; set; }
+        public virtual AppUser? AssignedToStaff { get; set; }
     }
 }

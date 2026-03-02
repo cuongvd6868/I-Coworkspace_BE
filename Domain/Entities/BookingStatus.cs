@@ -15,5 +15,6 @@ namespace Domain.Entities
 
         [MaxLength(255)]
         public string? Description { get; set; }
+        public virtual List<Booking> Bookings { get; set; } = new();
     }
 }

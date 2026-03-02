@@ -29,5 +29,6 @@ namespace Domain.Entities
 
         public double Latitude { get; set; }
         public double Longitude { get; set; }
+        public virtual List<WorkSpace> Workspaces { get; set; } = new();
     }
 }

@@ -10,7 +10,7 @@ namespace Domain.Entities
         public string UserId { get; set; }
         public int WorkspaceId { get; set; }
 
-        //public virtual AppUser? User { get; set; }
+        public virtual AppUser? User { get; set; }
         public virtual WorkSpace? Workspace { get; set; }
     }
 }

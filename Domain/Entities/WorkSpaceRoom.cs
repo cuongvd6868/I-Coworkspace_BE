@@ -30,9 +30,9 @@ namespace Domain.Entities
 
 
         public virtual WorkSpace? WorkSpace { get; set; }
-        //public virtual WorkSpaceRoomType? WorkSpaceRoomType { get; set; }
-        //public virtual List<WorkSpaceRoomImage> WorkSpaceRoomImages { get; set; } = new();
-        //public virtual List<WorkSpaceRoomAmenity> WorkSpaceRoomAmenities { get; set; } = new();
+        public virtual WorkSpaceRoomType? WorkSpaceRoomType { get; set; }
+        public virtual List<WorkSpaceRoomImage> WorkSpaceRoomImages { get; set; } = new();
+        public virtual List<WorkSpaceRoomAmenity> WorkSpaceRoomAmenities { get; set; } = new();
         public virtual List<Booking> Bookings { get; set; } = new();
         public virtual List<Review> Reviews { get; set; } = new();
 

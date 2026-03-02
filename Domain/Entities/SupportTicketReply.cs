@@ -15,6 +15,6 @@ namespace Domain.Entities
         public virtual SupportTicket Ticket { get; set; }
 
         public string RepliedByUserId { get; set; }
-        //public virtual AppUser RepliedByUser { get; set; }
+        public virtual AppUser RepliedByUser { get; set; }
     }
 }

@@ -9,6 +9,7 @@ namespace Domain.Entities
     {
         [Required]
         public int Id { get; set; }
+        public string UserId { get; set; }
         [MaxLength(255)]
         public string? CompanyName { get; set; }
 
@@ -25,6 +26,8 @@ namespace Domain.Entities
         [MaxLength(1000)]
         public string? CoverPhoto { get; set; }
         public bool IsVerified { get; set; } = false;
+        public virtual AppUser? User { get; set; }
+        public virtual List<WorkSpace> Workspaces { get; set; } = new();
 
     }
 }

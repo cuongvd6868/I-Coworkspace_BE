@@ -12,5 +12,6 @@ namespace Domain.Entities
         public virtual List<Review> Reviews { get; set; } = new();
         public virtual List<WorkSpaceFavorite> WorkSpaceFavorites { get; set; } = new();
         public virtual List<Post> Posts { get; set; } = new();
+        public virtual List<SupportTicket> SupportTickets { get; set; } = new();
     }
 }
