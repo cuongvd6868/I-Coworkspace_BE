@@ -59,6 +59,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddScoped<ISendMailService, SendMailService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 // Add Controllers + OData + JSON config
 builder.Services.AddControllers()
