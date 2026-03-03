@@ -7,6 +7,7 @@ namespace Domain.Entities
 {
     public class AppUser : IdentityUser
     {
+        [System.ComponentModel.DataAnnotations.Schema.InverseProperty("Customer")]
         public virtual List<Booking> Bookings { get; set; } = new();
         public virtual HostProfile? HostProfile { get; set; }
         public virtual List<Review> Reviews { get; set; } = new();

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialFinalFix : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -404,9 +404,7 @@ namespace Infrastructure.Migrations
                     AddressId = table.Column<int>(type: "int", nullable: false),
                     WorkSpaceTypeId = table.Column<int>(type: "int", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsVerified = table.Column<bool>(type: "bit", nullable: false),
-                    AddressId1 = table.Column<int>(type: "int", nullable: true),
-                    WorkSpaceTypeId1 = table.Column<int>(type: "int", nullable: true)
+                    IsVerified = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -417,11 +415,6 @@ namespace Infrastructure.Migrations
                         principalTable: "Addresses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_WorkSpaces_Addresses_AddressId1",
-                        column: x => x.AddressId1,
-                        principalTable: "Addresses",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_WorkSpaces_HostProfile_HostId",
                         column: x => x.HostId,
@@ -434,11 +427,6 @@ namespace Infrastructure.Migrations
                         principalTable: "WorkSpaceTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_WorkSpaces_WorkSpaceTypes_WorkSpaceTypeId1",
-                        column: x => x.WorkSpaceTypeId1,
-                        principalTable: "WorkSpaceTypes",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -531,8 +519,7 @@ namespace Infrastructure.Migrations
                     Capacity = table.Column<int>(type: "int", nullable: false),
                     Area = table.Column<double>(type: "float", nullable: false),
                     IsActive = table.Column<bool>(type: "bit", nullable: false),
-                    IsVerified = table.Column<bool>(type: "bit", nullable: false),
-                    WorkSpaceRoomTypeId1 = table.Column<int>(type: "int", nullable: true)
+                    IsVerified = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -543,11 +530,6 @@ namespace Infrastructure.Migrations
                         principalTable: "WorkSpaceRoomTypes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_WorkSpaceRooms_WorkSpaceRoomTypes_WorkSpaceRoomTypeId1",
-                        column: x => x.WorkSpaceRoomTypeId1,
-                        principalTable: "WorkSpaceRoomTypes",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_WorkSpaceRooms_WorkSpaces_WorkSpaceId",
                         column: x => x.WorkSpaceId,
@@ -604,21 +586,11 @@ namespace Infrastructure.Migrations
                     CheckedOutAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CancellationReason = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: true),
                     IsReviewed = table.Column<bool>(type: "bit", nullable: false),
-                    PaymentMethodID = table.Column<int>(type: "int", nullable: true),
-                    AppUserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    BookingStatusId1 = table.Column<int>(type: "int", nullable: true),
-                    GuestId1 = table.Column<int>(type: "int", nullable: true),
-                    PaymentMethodID1 = table.Column<int>(type: "int", nullable: true),
-                    WorkSpaceRoomId1 = table.Column<int>(type: "int", nullable: true)
+                    PaymentMethodID = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Bookings", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Bookings_AspNetUsers_AppUserId",
-                        column: x => x.AppUserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Bookings_AspNetUsers_CustomerId",
                         column: x => x.CustomerId,
@@ -632,21 +604,11 @@ namespace Infrastructure.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Bookings_BookingStatus_BookingStatusId1",
-                        column: x => x.BookingStatusId1,
-                        principalTable: "BookingStatus",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_Bookings_Guests_GuestId",
                         column: x => x.GuestId,
                         principalTable: "Guests",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Bookings_Guests_GuestId1",
-                        column: x => x.GuestId1,
-                        principalTable: "Guests",
-                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Bookings_PaymentMethods_PaymentMethodID",
                         column: x => x.PaymentMethodID,
@@ -654,21 +616,11 @@ namespace Infrastructure.Migrations
                         principalColumn: "PaymentMethodID",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Bookings_PaymentMethods_PaymentMethodID1",
-                        column: x => x.PaymentMethodID1,
-                        principalTable: "PaymentMethods",
-                        principalColumn: "PaymentMethodID");
-                    table.ForeignKey(
                         name: "FK_Bookings_WorkSpaceRooms_WorkSpaceRoomId",
                         column: x => x.WorkSpaceRoomId,
                         principalTable: "WorkSpaceRooms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Bookings_WorkSpaceRooms_WorkSpaceRoomId1",
-                        column: x => x.WorkSpaceRoomId1,
-                        principalTable: "WorkSpaceRooms",
-                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -826,19 +778,9 @@ namespace Infrastructure.Migrations
                 column: "BookingId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bookings_AppUserId",
-                table: "Bookings",
-                column: "AppUserId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Bookings_BookingStatusId",
                 table: "Bookings",
                 column: "BookingStatusId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bookings_BookingStatusId1",
-                table: "Bookings",
-                column: "BookingStatusId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_CustomerId",
@@ -851,29 +793,14 @@ namespace Infrastructure.Migrations
                 column: "GuestId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bookings_GuestId1",
-                table: "Bookings",
-                column: "GuestId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Bookings_PaymentMethodID",
                 table: "Bookings",
                 column: "PaymentMethodID");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Bookings_PaymentMethodID1",
-                table: "Bookings",
-                column: "PaymentMethodID1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Bookings_WorkSpaceRoomId",
                 table: "Bookings",
                 column: "WorkSpaceRoomId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Bookings_WorkSpaceRoomId1",
-                table: "Bookings",
-                column: "WorkSpaceRoomId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_HostProfile_UserId",
@@ -972,19 +899,9 @@ namespace Infrastructure.Migrations
                 column: "WorkSpaceRoomTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkSpaceRooms_WorkSpaceRoomTypeId1",
-                table: "WorkSpaceRooms",
-                column: "WorkSpaceRoomTypeId1");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_WorkSpaces_AddressId",
                 table: "WorkSpaces",
                 column: "AddressId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WorkSpaces_AddressId1",
-                table: "WorkSpaces",
-                column: "AddressId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WorkSpaces_HostId",
@@ -995,11 +912,6 @@ namespace Infrastructure.Migrations
                 name: "IX_WorkSpaces_WorkSpaceTypeId",
                 table: "WorkSpaces",
                 column: "WorkSpaceTypeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WorkSpaces_WorkSpaceTypeId1",
-                table: "WorkSpaces",
-                column: "WorkSpaceTypeId1");
         }
 
         /// <inheritdoc />

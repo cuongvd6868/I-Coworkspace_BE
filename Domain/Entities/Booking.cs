@@ -47,7 +47,7 @@ namespace Domain.Entities
         public virtual Guest? Guest { get; set; }
         public virtual WorkSpaceRoom? WorkSpaceRoom { get; set; }
         public virtual BookingStatus? BookingStatus { get; set; }
-        public PaymentMethod PaymentMethod { get; set; }
+        public virtual PaymentMethod? PaymentMethod { get; set; }
         public virtual List<BookingParticipant> BookingParticipants { get; set; } = new();
         public virtual List<Review> Reviews { get; set; } = new();
 

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260302143846_InitialFinalFix")]
-    partial class InitialFinalFix
+    [Migration("20260303034140_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -197,18 +197,12 @@ namespace Infrastructure.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("AppUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<string>("BookingCode")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("BookingStatusId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("BookingStatusId1")
                         .HasColumnType("int");
 
                     b.Property<string>("CancellationReason")
@@ -237,9 +231,6 @@ namespace Infrastructure.Migrations
                     b.Property<int?>("GuestId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("GuestId1")
-                        .HasColumnType("int");
-
                     b.Property<bool>("IsReviewed")
                         .HasColumnType("bit");
 
@@ -247,9 +238,6 @@ namespace Infrastructure.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("PaymentMethodID")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("PaymentMethodID1")
                         .HasColumnType("int");
 
                     b.Property<string>("PaymentTransactionId")
@@ -275,30 +263,17 @@ namespace Infrastructure.Migrations
                     b.Property<int>("WorkSpaceRoomId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("WorkSpaceRoomId1")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
-
                     b.HasIndex("BookingStatusId");
-
-                    b.HasIndex("BookingStatusId1");
 
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("GuestId");
 
-                    b.HasIndex("GuestId1");
-
                     b.HasIndex("PaymentMethodID");
 
-                    b.HasIndex("PaymentMethodID1");
-
                     b.HasIndex("WorkSpaceRoomId");
-
-                    b.HasIndex("WorkSpaceRoomId1");
 
                     b.ToTable("Bookings");
                 });
@@ -691,9 +666,6 @@ namespace Infrastructure.Migrations
                     b.Property<int>("AddressId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("AddressId1")
-                        .HasColumnType("int");
-
                     b.Property<string>("Description")
                         .HasMaxLength(1000)
                         .HasColumnType("nvarchar(1000)");
@@ -715,20 +687,13 @@ namespace Infrastructure.Migrations
                     b.Property<int>("WorkSpaceTypeId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("WorkSpaceTypeId1")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("AddressId");
 
-                    b.HasIndex("AddressId1");
-
                     b.HasIndex("HostId");
 
                     b.HasIndex("WorkSpaceTypeId");
-
-                    b.HasIndex("WorkSpaceTypeId1");
 
                     b.ToTable("WorkSpaces");
                 });
@@ -828,16 +793,11 @@ namespace Infrastructure.Migrations
                     b.Property<int>("WorkSpaceRoomTypeId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("WorkSpaceRoomTypeId1")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("WorkSpaceId");
 
                     b.HasIndex("WorkSpaceRoomTypeId");
-
-                    b.HasIndex("WorkSpaceRoomTypeId1");
 
                     b.ToTable("WorkSpaceRooms");
                 });
@@ -1082,52 +1042,32 @@ namespace Infrastructure.Migrations
 
             modelBuilder.Entity("Domain.Entities.Booking", b =>
                 {
-                    b.HasOne("Domain.Entities.AppUser", null)
-                        .WithMany("Bookings")
-                        .HasForeignKey("AppUserId");
-
                     b.HasOne("Domain.Entities.BookingStatus", "BookingStatus")
-                        .WithMany()
+                        .WithMany("Bookings")
                         .HasForeignKey("BookingStatusId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Domain.Entities.BookingStatus", null)
-                        .WithMany("Bookings")
-                        .HasForeignKey("BookingStatusId1");
-
                     b.HasOne("Domain.Entities.AppUser", "Customer")
-                        .WithMany()
+                        .WithMany("Bookings")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Restrict);
 
                     b.HasOne("Domain.Entities.Guest", "Guest")
-                        .WithMany()
+                        .WithMany("Bookings")
                         .HasForeignKey("GuestId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.HasOne("Domain.Entities.Guest", null)
-                        .WithMany("Bookings")
-                        .HasForeignKey("GuestId1");
-
                     b.HasOne("Domain.Entities.PaymentMethod", "PaymentMethod")
-                        .WithMany()
+                        .WithMany("Bookings")
                         .HasForeignKey("PaymentMethodID")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("Domain.Entities.PaymentMethod", null)
-                        .WithMany("Bookings")
-                        .HasForeignKey("PaymentMethodID1");
-
                     b.HasOne("Domain.Entities.WorkSpaceRoom", "WorkSpaceRoom")
-                        .WithMany()
+                        .WithMany("Bookings")
                         .HasForeignKey("WorkSpaceRoomId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Domain.Entities.WorkSpaceRoom", null)
-                        .WithMany("Bookings")
-                        .HasForeignKey("WorkSpaceRoomId1");
 
                     b.Navigation("BookingStatus");
 
@@ -1254,14 +1194,10 @@ namespace Infrastructure.Migrations
             modelBuilder.Entity("Domain.Entities.WorkSpace", b =>
                 {
                     b.HasOne("Domain.Entities.Address", "Address")
-                        .WithMany()
+                        .WithMany("Workspaces")
                         .HasForeignKey("AddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Domain.Entities.Address", null)
-                        .WithMany("Workspaces")
-                        .HasForeignKey("AddressId1");
 
                     b.HasOne("Domain.Entities.HostProfile", "Host")
                         .WithMany("Workspaces")
@@ -1270,14 +1206,10 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.WorkSpaceType", "WorkSpaceType")
-                        .WithMany()
+                        .WithMany("Workspaces")
                         .HasForeignKey("WorkSpaceTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Domain.Entities.WorkSpaceType", null)
-                        .WithMany("Workspaces")
-                        .HasForeignKey("WorkSpaceTypeId1");
 
                     b.Navigation("Address");
 
@@ -1325,14 +1257,10 @@ namespace Infrastructure.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Entities.WorkSpaceRoomType", "WorkSpaceRoomType")
-                        .WithMany()
+                        .WithMany("WorkSpaceRooms")
                         .HasForeignKey("WorkSpaceRoomTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Domain.Entities.WorkSpaceRoomType", null)
-                        .WithMany("WorkSpaceRooms")
-                        .HasForeignKey("WorkSpaceRoomTypeId1");
 
                     b.Navigation("WorkSpace");
 
