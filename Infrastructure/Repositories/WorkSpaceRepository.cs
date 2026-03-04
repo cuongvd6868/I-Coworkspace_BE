@@ -16,17 +16,6 @@ namespace Infrastructure.Repositories
             _context = context;
         }
 
-        public async Task AddToFavoritesAsync(int workSpaceId, string userId)
-        {
-            var favorite = new WorkSpaceFavorite
-            {
-                UserId = userId,
-                WorkspaceId = workSpaceId
-            };
-            _context.WorkSpaceFavorites.Add(favorite);
-            await _context.SaveChangesAsync();
-        }
-
         public async Task AddWorkSpaceAsync(WorkSpace workSpace)
         {
             _context.WorkSpaces.Add(workSpace);
@@ -45,7 +34,12 @@ namespace Infrastructure.Repositories
 
         public async Task<IEnumerable<WorkSpace>> GetAllWorkSpacesAsync()
         {
-            return await _context.WorkSpaces.ToListAsync();
+            return await _context.WorkSpaces
+                .Include(w => w.Address)
+                .Include(w => w.Host)
+                .Include(w => w.WorkSpaceType)
+                .Include(w => w.WorkSpaceImages)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<WorkSpace>> GetFavoriteWorkSpacesAsync(string userId)
@@ -58,7 +52,12 @@ namespace Infrastructure.Repositories
 
         public async Task<WorkSpace> GetWorkSpaceByIdAsync(int id)
         {
-            return await _context.WorkSpaces.FindAsync(id);
+            return await _context.WorkSpaces
+                .Include(w => w.Address)
+                .Include(w => w.Host)
+                .Include(w => w.WorkSpaceType)
+                .Include(w => w.WorkSpaceImages)
+                .FirstOrDefaultAsync(w => w.Id == id);
         }
 
         public async Task<IEnumerable<WorkSpace>> GetWorkSpacesByLocationAsync(string location)
@@ -75,25 +74,12 @@ namespace Infrastructure.Repositories
         public async Task<IEnumerable<WorkSpace>> GetWorkSpacesByTypeAsync(int typeId)
         {
             return await _context.WorkSpaces
+                .Include(w => w.Address)
+                .Include(w => w.Host)
+                .Include(w => w.WorkSpaceType)
+                .Include(w => w.WorkSpaceImages)
                 .Where(w => w.WorkSpaceTypeId == typeId)
                 .ToListAsync();
-        }
-
-        public async Task<bool> IsFavoriteAsync(int workSpaceId, string userId)
-        {
-            return await _context.WorkSpaceFavorites
-                .AnyAsync(f => f.UserId == userId && f.WorkspaceId == workSpaceId);
-        }
-
-        public async Task RemoveFromFavoritesAsync(int workSpaceId, string userId)
-        {
-            var favorite = await _context.WorkSpaceFavorites
-                .FirstOrDefaultAsync(f => f.UserId == userId && f.WorkspaceId == workSpaceId);
-            if (favorite != null)
-            {
-                _context.WorkSpaceFavorites.Remove(favorite);
-                await _context.SaveChangesAsync();
-            }
         }
 
         public async Task UpdateWorkSpaceAsync(WorkSpace workSpace)

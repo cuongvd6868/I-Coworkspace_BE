@@ -15,8 +15,6 @@ namespace Domain.Interfaces
         Task AddWorkSpaceAsync(WorkSpace workSpace);
         Task UpdateWorkSpaceAsync(WorkSpace workSpace);
         Task DeleteWorkSpaceAsync(int id);
-        Task<bool> IsFavoriteAsync(int workSpaceId, string userId);
-        Task AddToFavoritesAsync(int workSpaceId, string userId);
-        Task RemoveFromFavoritesAsync(int workSpaceId, string userId);
+
     }
 }
