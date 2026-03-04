@@ -56,10 +56,12 @@ builder.Services.AddAuthentication(options =>
 });
 
 // Dependency Injection
+
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddScoped<ISendMailService, SendMailService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IWorkSpaceFavoriteService, WorkSpaceFavoriteService>();
 
 // Add Controllers + OData + JSON config
 builder.Services.AddControllers()
