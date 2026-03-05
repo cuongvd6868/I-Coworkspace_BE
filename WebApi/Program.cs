@@ -62,6 +62,7 @@ builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailS
 builder.Services.AddScoped<ISendMailService, SendMailService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IWorkSpaceFavoriteService, WorkSpaceFavoriteService>();
+//builder.Services.AddScoped<IHostProfileService, HostProfileService>();
 
 // Add Controllers + OData + JSON config
 builder.Services.AddControllers()

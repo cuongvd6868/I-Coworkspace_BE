@@ -2,9 +2,9 @@
 using Domain.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Application.DTOs.Account; 
+using Application.DTOs.Account;
 
-
+// hostprofile, notification, post, promotion, supporttikcet & reply, booking, review, owner, staff, admin
 namespace WebApi.Controllers
 {
     [Route("api/account")]

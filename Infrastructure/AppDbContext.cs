@@ -32,6 +32,7 @@ namespace Infrastructure
         public DbSet<WorkSpaceRoomImage> WorkSpaceRoomImages { get; set; }
         public DbSet<WorkSpaceRoomType> WorkSpaceRoomTypes { get; set; }
         public DbSet<WorkSpaceType> WorkSpaceTypes { get; set; }
+        public DbSet<HostProfile> HostProfiles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

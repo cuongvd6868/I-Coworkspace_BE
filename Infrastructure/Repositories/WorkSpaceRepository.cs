@@ -38,6 +38,7 @@ namespace Infrastructure.Repositories
                 .Include(w => w.Address)
                 .Include(w => w.Host)
                 .Include(w => w.WorkSpaceType)
+                .Include(w => w.WorkSpaceRooms)
                 .Include(w => w.WorkSpaceImages)
                 .ToListAsync();
         }
@@ -56,6 +57,7 @@ namespace Infrastructure.Repositories
                 .Include(w => w.Address)
                 .Include(w => w.Host)
                 .Include(w => w.WorkSpaceType)
+                .Include(w => w.WorkSpaceRooms)
                 .Include(w => w.WorkSpaceImages)
                 .FirstOrDefaultAsync(w => w.Id == id);
         }

@@ -32,7 +32,17 @@ namespace Application.Mappings
                 // Map Images (Chuyển danh sách object sang danh sách string url)
                 ImageUrls = entity.WorkSpaceImages?
                             .Select(img => img.ImageUrl)
-                            .ToList() ?? new List<string>()
+                            .ToList() ?? new List<string>(),
+                //WorkSpaceRooms = entity.WorkSpaceRooms?
+                //            .Select(room => new WorkSpaceRoom
+                //            {
+                //                Id = room.Id,
+                //                //Title = room.Title,
+                //                //Description = room.Description,
+                //                Capacity = room.Capacity,
+                //                PricePerHour = room.PricePerHour
+                //            }).ToList() ?? new List<string>()
+
             };
         }
     }
