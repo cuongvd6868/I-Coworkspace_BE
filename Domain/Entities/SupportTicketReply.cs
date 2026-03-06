@@ -15,6 +15,7 @@ namespace Domain.Entities
         public virtual SupportTicket Ticket { get; set; }
 
         public string RepliedByUserId { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
         public virtual AppUser RepliedByUser { get; set; }
     }
 }

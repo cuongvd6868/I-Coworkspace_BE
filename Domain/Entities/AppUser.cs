@@ -14,5 +14,7 @@ namespace Domain.Entities
         public virtual List<WorkSpaceFavorite> WorkSpaceFavorites { get; set; } = new();
         public virtual List<Post> Posts { get; set; } = new();
         public virtual List<SupportTicket> SupportTickets { get; set; } = new();
+        public virtual ICollection<Conversation> CustomerConversations { get; set; }
+        public virtual ICollection<Conversation> OwnerConversations { get; set; }
     }
 }

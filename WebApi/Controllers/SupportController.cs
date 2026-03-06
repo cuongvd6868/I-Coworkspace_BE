@@ -9,7 +9,7 @@ namespace WebApi.Controllers
 {
     [Route("api/support")]
     [ApiController]
-    [Authorize] // Yêu cầu đăng nhập cho tất cả các hành động
+    [Authorize]
     public class SupportController : ControllerBase
     {
         private readonly ISupportService _supportService;
@@ -26,17 +26,9 @@ namespace WebApi.Controllers
         [HttpPost("tickets")]
         public async Task<IActionResult> CreateTicket([FromBody] CreateTicketRequest request)
         {
-            try
-            {
-                var userId = User.GetUserId();
-                await _supportService.CreateTicketAsync(request, userId);
-                return Ok(new { Message = "Phiếu hỗ trợ của bạn đã được gửi thành công." });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Lỗi khi tạo Ticket");
-                return StatusCode(500, "Internal server error");
-            }
+            var userId = User.GetUserId();
+            await _supportService.CreateTicketAsync(request, userId);
+            return Ok(new { Message = "Yêu cầu hỗ trợ đã được gửi." });
         }
 
         [HttpGet("my-tickets")]
@@ -56,9 +48,9 @@ namespace WebApi.Controllers
                 await _supportService.UserReplyAsync(id, message, userId);
                 return Ok(new { Message = "Gửi phản hồi thành công." });
             }
-            catch (UnauthorizedAccessException ex)
+            catch (Exception ex)
             {
-                return Forbid(ex.Message);
+                return BadRequest(new { Message = ex.Message });
             }
         }
 
@@ -74,10 +66,10 @@ namespace WebApi.Controllers
 
         [HttpGet("tickets/{id}")]
         [Authorize(Roles = "Staff,Admin")]
-        public async Task<IActionResult> GetTicketDetails(int id)
+        public async Task<IActionResult> GetDetails(int id)
         {
             var ticket = await _supportService.GetTicketDetailsAsync(id);
-            if (ticket == null) return NotFound("Không tìm thấy ticket.");
+            if (ticket == null) return NotFound("Không tìm thấy phiếu hỗ trợ.");
             return Ok(ticket);
         }
 
@@ -89,12 +81,11 @@ namespace WebApi.Controllers
             {
                 var staffId = User.GetUserId();
                 await _supportService.StaffReplyAsync(id, message, staffId);
-                return Ok(new { Message = "Nhân viên phản hồi thành công." });
+                return Ok(new { Message = "Đã phản hồi khách hàng." });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Lỗi khi Staff phản hồi ticket");
-                return StatusCode(500, "Internal server error");
+                return BadRequest(new { Message = ex.Message });
             }
         }
 
@@ -103,7 +94,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> CloseTicket(int id)
         {
             await _supportService.CloseTicketAsync(id);
-            return Ok(new { Message = "Đã đóng phiếu hỗ trợ." });
+            return Ok(new { Message = "Phiếu hỗ trợ đã được đóng." });
         }
     }
 }
