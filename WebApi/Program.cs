@@ -64,6 +64,7 @@ builder.Services.AddScoped<IWorkSpaceFavoriteRepository, WorkSpaceFavoriteReposi
 builder.Services.AddScoped<IWorkSpaceRepository, WorkSpaceRepository>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
+builder.Services.AddScoped<ISupportRepository, SupportRepository>();
 
 
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -74,6 +75,7 @@ builder.Services.AddScoped<IWorkSpaceFavoriteService, WorkSpaceFavoriteService>(
 builder.Services.AddScoped<IHostProfileService, HostProfileService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IPromotionService, PromotionService>();
+builder.Services.AddScoped<ISupportService, SupportService>();
 
 // Add Controllers + OData + JSON config
 builder.Services.AddControllers()

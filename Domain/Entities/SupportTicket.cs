@@ -21,6 +21,7 @@ namespace Domain.Entities
 
         public string SubmittedByUserId { get; set; }
         public virtual AppUser SubmittedByUser { get; set; }
+        public virtual List<SupportTicketReply> Replies { get; set; } = new();
 
         public string? AssignedToStaffId { get; set; }
         public virtual AppUser? AssignedToStaff { get; set; }
