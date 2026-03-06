@@ -36,10 +36,11 @@ namespace Infrastructure.Repositories
         {
             return await _context.WorkSpaces
                 .Include(w => w.Address)
-                .Include(w => w.Host)
                 .Include(w => w.WorkSpaceType)
                 .Include(w => w.WorkSpaceRooms)
-                .Include(w => w.WorkSpaceImages)
+                    .ThenInclude(r => r.WorkSpaceRoomAmenities)
+                        .ThenInclude(ra => ra.Amenity) // Lấy tên tiện ích (Wifi, Máy chiếu...)
+                .Where(w => w.IsActive)
                 .ToListAsync();
         }
 

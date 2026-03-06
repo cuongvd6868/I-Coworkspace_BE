@@ -12,5 +12,6 @@ namespace Domain.Interfaces
         Task AddMessageAsync(ChatMessage message);
         Task<IEnumerable<ChatMessage>> GetMessagesByConversationIdAsync(int conversationId, int skip, int take);
         Task MarkMessagesAsReadAsync(int conversationId, string readerId);
+        Task<int> GetUnreadCountAsync(int conversationId, string userId);
     }
 }

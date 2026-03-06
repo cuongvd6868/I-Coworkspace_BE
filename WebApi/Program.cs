@@ -97,6 +97,8 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IPromotionService, PromotionService>();
 builder.Services.AddScoped<ISupportService, SupportService>();
 builder.Services.AddScoped<IChatService, ChatService>();
+//builder.Services.AddScoped<IAIService, AIService>();
+builder.Services.AddHttpClient<IAIService, AIService>();
 
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddScoped<ISendMailService, SendMailService>();
