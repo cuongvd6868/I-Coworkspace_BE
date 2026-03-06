@@ -9,5 +9,6 @@ namespace Domain.Interfaces
         Task<bool> IsFavoriteAsync(int workSpaceId, string userId);
         Task AddToFavoritesAsync(int workSpaceId, string userId);
         Task RemoveFromFavoritesAsync(int workSpaceId, string userId);
+        Task<IEnumerable<int>> GetWorkSpaceIdsByUserIdAsync(string userId);
     }
 }

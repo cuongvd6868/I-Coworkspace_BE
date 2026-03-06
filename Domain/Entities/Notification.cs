@@ -21,5 +21,10 @@ namespace Domain.Entities
         [Required]
         [MaxLength(50)]
         public string SenderRole { get; set; }
+        public int? WorkSpaceId { get; set; }
+
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+        public virtual WorkSpace? WorkSpace { get; set; }
     }
 }

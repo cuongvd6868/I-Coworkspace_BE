@@ -43,5 +43,14 @@ namespace Infrastructure.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        // Infrastructure/Repositories/WorkSpaceFavoriteRepository.cs
+        public async Task<IEnumerable<int>> GetWorkSpaceIdsByUserIdAsync(string userId)
+        {
+            return await _context.WorkSpaceFavorites
+                .Where(f => f.UserId == userId)
+                .Select(f => f.WorkspaceId)
+                .ToListAsync();
+        }
     }
 }

@@ -89,5 +89,11 @@ namespace Infrastructure.Repositories
             _context.WorkSpaces.Update(workSpace);
             await _context.SaveChangesAsync();
         }
+
+        public async Task<bool> IsOwnerOfWorkspaceAsync(int hostId, int workspaceId)
+        {
+            return await _context.WorkSpaces
+                .AnyAsync(w => w.Id == workspaceId && w.HostId == hostId);
+        }
     }
 }

@@ -1,6 +1,8 @@
 using Application.Interfaces;
 using Domain.Entities;
+using Domain.Interfaces;
 using Infrastructure;
+using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -56,6 +58,12 @@ builder.Services.AddAuthentication(options =>
 });
 
 // Dependency Injection
+builder.Services.AddScoped<IHostProfileRepository, HostProfileRepository>();
+builder.Services.AddScoped<IPostRepository, PostRepository>();
+builder.Services.AddScoped<IWorkSpaceFavoriteRepository, WorkSpaceFavoriteRepository>();
+builder.Services.AddScoped<IWorkSpaceRepository, WorkSpaceRepository>();
+builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+
 
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
@@ -63,6 +71,7 @@ builder.Services.AddScoped<ISendMailService, SendMailService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IWorkSpaceFavoriteService, WorkSpaceFavoriteService>();
 builder.Services.AddScoped<IHostProfileService, HostProfileService>();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 // Add Controllers + OData + JSON config
 builder.Services.AddControllers()
@@ -113,3 +122,5 @@ static IEdmModel GetEdmModel()
     // builder.EntitySet<Category>("Categories");
     return builder.GetEdmModel();
 }
+//dotnet ef migrations add UpdateDb -p Infrastructure -s WebApi
+//dotnet ef database update -p Infrastructure -s WebApi

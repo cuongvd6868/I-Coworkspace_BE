@@ -15,6 +15,7 @@ namespace Domain.Interfaces
         Task AddWorkSpaceAsync(WorkSpace workSpace);
         Task UpdateWorkSpaceAsync(WorkSpace workSpace);
         Task DeleteWorkSpaceAsync(int id);
+        Task<bool> IsOwnerOfWorkspaceAsync(int hostId, int workspaceId);
 
     }
 }

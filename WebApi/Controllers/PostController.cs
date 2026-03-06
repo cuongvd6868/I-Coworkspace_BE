@@ -51,7 +51,6 @@ namespace WebApi.Controllers
         {
             try
             {
-                // Gán UserId từ Token vào request trước khi map
                 request.UserId = User.GetUserId();
 
                 var post = request.ToPostCreateDTO();
