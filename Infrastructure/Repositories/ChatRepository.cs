@@ -65,5 +65,13 @@ namespace Infrastructure.Repositories
             foreach (var msg in unreadMessages) msg.IsRead = true;
             await _context.SaveChangesAsync();
         }
+
+        public async Task<int> GetUnreadCountAsync(int conversationId, string userId)
+        {
+            return await _context.ChatMessages
+                .CountAsync(m => m.ConversationId == conversationId
+                            && m.SenderId != userId
+                            && !m.IsRead);
+        }
     }
 }

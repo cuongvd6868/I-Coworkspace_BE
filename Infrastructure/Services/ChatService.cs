@@ -67,7 +67,17 @@ namespace Infrastructure.Services
         public async Task<IEnumerable<ConversationDto>> GetMyConversationsAsync(string userId)
         {
             var conversations = await _chatRepo.GetUserConversationsAsync(userId);
-            return conversations.Select(c => c.ToDto(userId));
+            var dtos = new List<ConversationDto>();
+
+            foreach (var conv in conversations)
+            {
+                var dto = conv.ToDto(userId);
+                // Đếm số tin nhắn chưa đọc của cuộc hội thoại này
+                dto.UnreadCount = await _chatRepo.GetUnreadCountAsync(conv.Id, userId);
+                dtos.Add(dto);
+            }
+
+            return dtos;
         }
 
         public async Task<IEnumerable<MessageDto>> GetChatHistoryAsync(int conversationId, string userId, int skip = 0, int take = 50)
@@ -89,7 +99,7 @@ namespace Infrastructure.Services
         {
             await _chatRepo.MarkMessagesAsReadAsync(conversationId, userId);
 
-            // Gửi SignalR thông báo tin nhắn đã được đọc (tùy chọn)
+            // Bắn SignalR để Client cập nhật: UnreadCount về 0
             await _hubContext.Clients.Group($"Chat_{conversationId}")
                 .SendAsync("MessagesRead", new { conversationId, readerId = userId });
         }

@@ -1,5 +1,6 @@
 ﻿using Application.DTOs.Chat;
 using Application.Interfaces;
+using Domain.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -12,13 +13,16 @@ namespace WebApi.Controllers
     public class ChatController : ControllerBase
     {
         private readonly IChatService _chatService;
-        public ChatController(IChatService chatService) => _chatService = chatService;
+        public ChatController(IChatService chatService)
+        {
+            _chatService = chatService;
+        }
 
         // 1. Tạo hoặc lấy hội thoại hiện có (Dùng khi nhấn nút "Chat" trên UI)
         [HttpPost("start/{ownerId}")]
         public async Task<IActionResult> StartChat(string ownerId)
         {
-            var customerId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var customerId = User.GetUserId();
             if (string.IsNullOrEmpty(customerId)) return Unauthorized();
 
             var convId = await _chatService.GetOrCreateConversationIdAsync(customerId, ownerId);
@@ -29,7 +33,7 @@ namespace WebApi.Controllers
         [HttpPost("send")]
         public async Task<IActionResult> SendMessage([FromBody] SendMessageRequest req)
         {
-            var senderId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var senderId = User.GetUserId();
             var result = await _chatService.SendMessageAsync(req.ConversationId, senderId!, req.Message);
             return Ok(result);
         }
@@ -38,7 +42,7 @@ namespace WebApi.Controllers
         [HttpGet("my-conversations")]
         public async Task<IActionResult> GetMyConversations()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.GetUserId();
             var conversations = await _chatService.GetMyConversationsAsync(userId!);
             return Ok(conversations);
         }
@@ -47,7 +51,7 @@ namespace WebApi.Controllers
         [HttpGet("history/{conversationId}")]
         public async Task<IActionResult> GetChatHistory(int conversationId, [FromQuery] int skip = 0, [FromQuery] int take = 50)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.GetUserId();
             try
             {
                 var messages = await _chatService.GetChatHistoryAsync(conversationId, userId!, skip, take);
@@ -63,9 +67,18 @@ namespace WebApi.Controllers
         [HttpPatch("{conversationId}/read")]
         public async Task<IActionResult> MarkAsRead(int conversationId)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = User.GetUserId();
             await _chatService.MarkAsReadAsync(conversationId, userId!);
             return NoContent();
+        }
+
+        [HttpGet("unread-total")]
+        public async Task<IActionResult> GetTotalUnreadCount()
+        {
+            var userId = User.GetUserId();
+            var conversations = await _chatService.GetMyConversationsAsync(userId!);
+            var total = conversations.Sum(c => c.UnreadCount);
+            return Ok(new { totalUnread = total });
         }
     }
 }
