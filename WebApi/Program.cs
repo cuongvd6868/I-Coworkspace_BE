@@ -2,6 +2,7 @@ using Application.Interfaces;
 using Domain.Entities;
 using Domain.Interfaces;
 using Infrastructure;
+using Infrastructure.Hubs;
 using Infrastructure.Repositories;
 using Infrastructure.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -16,12 +17,21 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// --- 1. CONFIG SERVICES ---
 
-builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddControllers()
+    .AddJsonOptions(opt =>
+    {
+        opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        opt.JsonSerializerOptions.WriteIndented = true;
+    })
+    .AddOData(opt =>
+        opt.Select().Filter().OrderBy().Expand().SetMaxTop(100).Count()
+           .AddRouteComponents("odata", GetEdmModel()));
+
 builder.Services.AddOpenApi();
 
+// Database
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
@@ -29,15 +39,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddIdentity<AppUser, IdentityRole>(options =>
 {
     options.Password.RequireDigit = true;
-    options.Password.RequireLowercase = true;
-    options.Password.RequireUppercase = false;
-    options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 6;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequireUppercase = false;
 }).AddEntityFrameworkStores<AppDbContext>();
 
-
-
-// JWT Authentication
+// JWT Authentication + SignalR Support
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -52,8 +59,22 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["JWT:Issuer"],
         ValidAudience = builder.Configuration["JWT:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(
-            Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"]))
+    };
+
+    // QUAN TRỌNG: Cấu hình để SignalR lấy Token từ Query String
+    options.Events = new JwtBearerEvents
+    {
+        OnMessageReceived = context =>
+        {
+            var accessToken = context.Request.Query["access_token"];
+            var path = context.HttpContext.Request.Path;
+            if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hub"))
+            {
+                context.Token = accessToken;
+            }
+            return Task.CompletedTask;
+        }
     };
 });
 
@@ -65,66 +86,64 @@ builder.Services.AddScoped<IWorkSpaceRepository, WorkSpaceRepository>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
 builder.Services.AddScoped<ISupportRepository, SupportRepository>();
+builder.Services.AddScoped<IChatRepository, ChatRepository>();
 
 
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
-builder.Services.AddScoped<ISendMailService, SendMailService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IWorkSpaceFavoriteService, WorkSpaceFavoriteService>();
 builder.Services.AddScoped<IHostProfileService, HostProfileService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IPromotionService, PromotionService>();
 builder.Services.AddScoped<ISupportService, SupportService>();
+builder.Services.AddScoped<IChatService, ChatService>();
 
-// Add Controllers + OData + JSON config
-builder.Services.AddControllers()
-    .AddJsonOptions(opt =>
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+builder.Services.AddScoped<ISendMailService, SendMailService>();
+
+// SignalR & CORS
+builder.Services.AddSignalR();
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", policy =>
     {
-        opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-        opt.JsonSerializerOptions.WriteIndented = true; // Format đẹp hơn
-    })
-    .AddOData(opt =>
-        opt.Select()
-           .Filter()
-           .OrderBy()
-           .Expand()
-           .SetMaxTop(100)
-           .Count()
-           .AddRouteComponents("odata", GetEdmModel()));
+        policy.WithOrigins("http://localhost:3000") // Thay bằng URL React của bạn
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials(); // Bắt buộc cho SignalR
+    });
+});
+
+// --- 2. CONFIG PIPELINE (THỨ TỰ RẤT QUAN TRỌNG) ---
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
 
+app.UseHttpsRedirection();
+
+// CORS phải đặt TRƯỚC Routing và Auth
+app.UseCors("AllowAll");
+
 app.UseRouting();
 
-// CORS
-app.UseCors(cors =>
-{
-    cors.AllowAnyMethod()
-        .AllowAnyHeader()
-        .AllowCredentials()
-        .SetIsOriginAllowed(origin => true);
-});
-
-app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Đăng ký các Hub và Controller
+app.MapHub<SupportHub>("/hub/support");
+app.MapHub<ChatHub>("/hub/chat");
 app.MapControllers();
 
 app.Run();
 
+// OData Model
 static IEdmModel GetEdmModel()
 {
     var builder = new ODataConventionModelBuilder();
-    // builder.EntitySet<Category>("Categories");
+    // builder.EntitySet<WorkSpace>("WorkSpaces");
     return builder.GetEdmModel();
 }
-//dotnet ef migrations add AddWorkspacePromotion -p Infrastructure -s WebApi
-//dotnet ef database update -p Infrastructure -s WebApi

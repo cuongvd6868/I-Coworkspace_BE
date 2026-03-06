@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Application.DTOs.Account;
 
-//  supporttikcet & reply, booking, review, owner, staff, admin
+//  room, booking, review, owner, staff, admin
 namespace WebApi.Controllers
 {
     [Route("api/account")]

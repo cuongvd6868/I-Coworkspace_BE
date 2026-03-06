@@ -20,6 +20,8 @@ namespace Domain.Entities
         public SupportTicketStatus Status { get; set; } = SupportTicketStatus.New;
 
         public string SubmittedByUserId { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
         public virtual AppUser SubmittedByUser { get; set; }
         public virtual List<SupportTicketReply> Replies { get; set; } = new();
 
