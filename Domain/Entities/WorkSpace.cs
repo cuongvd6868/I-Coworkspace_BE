@@ -33,5 +33,6 @@ namespace Domain.Entities
         public virtual WorkSpaceType? WorkSpaceType { get; set; }
         public virtual List<WorkSpaceRoom> WorkSpaceRooms { get; set; } = new();
         public virtual List<WorkSpaceFavorite> WorkSpaceFavorites { get; set; } = new();
+        public virtual List<Notification> Notifications { get; set; } = new();
     }
 }

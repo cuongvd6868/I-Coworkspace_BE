@@ -80,6 +80,20 @@ namespace Infrastructure
             modelBuilder.Entity<Promotion>().HasOne(h => h.Host).WithMany().HasForeignKey(h => h.HostId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Amenity>().HasMany(a => a.WorkspaceRoomAmenities).WithOne(wra => wra.Amenity).HasForeignKey(wra => wra.AmenityId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<BlockedTimeSlot>().HasOne(bts => bts.WorkSpaceRoom).WithMany(wr => wr.BlockedTimeSlots).HasForeignKey(bts => bts.WorkSpaceRoomId).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<Notification>(entity =>
+            {
+                entity.HasKey(e => e.Id);
+
+                // Cấu hình quan hệ: Một Workspace có nhiều Notifications
+                // DeleteBehavior.SetNull: Nếu xóa Workspace, thông báo vẫn còn (hoặc dùng Cascade nếu muốn xóa hết)
+                entity.HasOne(n => n.WorkSpace)
+                      .WithMany(w => w.Notifications)
+                      .HasForeignKey(n => n.WorkSpaceId)
+                      .OnDelete(DeleteBehavior.SetNull);
+
+                entity.Property(e => e.Title).IsRequired().HasMaxLength(200);
+                entity.Property(e => e.SenderRole).IsRequired().HasMaxLength(50);
+            });
         }
     }
 }
