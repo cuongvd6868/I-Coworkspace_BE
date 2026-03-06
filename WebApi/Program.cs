@@ -63,6 +63,7 @@ builder.Services.AddScoped<IPostRepository, PostRepository>();
 builder.Services.AddScoped<IWorkSpaceFavoriteRepository, WorkSpaceFavoriteRepository>();
 builder.Services.AddScoped<IWorkSpaceRepository, WorkSpaceRepository>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
+builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
 
 
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -72,6 +73,7 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IWorkSpaceFavoriteService, WorkSpaceFavoriteService>();
 builder.Services.AddScoped<IHostProfileService, HostProfileService>();
 builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<IPromotionService, PromotionService>();
 
 // Add Controllers + OData + JSON config
 builder.Services.AddControllers()
@@ -122,5 +124,5 @@ static IEdmModel GetEdmModel()
     // builder.EntitySet<Category>("Categories");
     return builder.GetEdmModel();
 }
-//dotnet ef migrations add UpdateDb -p Infrastructure -s WebApi
+//dotnet ef migrations add AddWorkspacePromotion -p Infrastructure -s WebApi
 //dotnet ef database update -p Infrastructure -s WebApi
