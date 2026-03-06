@@ -28,6 +28,7 @@ namespace Domain.Entities
         public bool IsVerified { get; set; } = false;
         public virtual AppUser? User { get; set; }
         public virtual List<WorkSpace> Workspaces { get; set; } = new();
+        public virtual List<Promotion> Promotions { get; set; } = new();
 
     }
 }

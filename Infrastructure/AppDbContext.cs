@@ -33,6 +33,7 @@ namespace Infrastructure
         public DbSet<WorkSpaceRoomType> WorkSpaceRoomTypes { get; set; }
         public DbSet<WorkSpaceType> WorkSpaceTypes { get; set; }
         public DbSet<HostProfile> HostProfiles { get; set; }
+        public DbSet<WorkSpacePromotion> WorkSpacePromotions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -77,7 +78,28 @@ namespace Infrastructure
             modelBuilder.Entity<WorkSpaceFavorite>().HasOne(f => f.Workspace).WithMany(w => w.WorkSpaceFavorites).HasForeignKey(f => f.WorkspaceId).OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<HostProfile>().HasOne(h => h.User).WithOne(u => u.HostProfile).HasForeignKey<HostProfile>(h => h.UserId).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<Promotion>().HasOne(h => h.Host).WithMany().HasForeignKey(h => h.HostId).OnDelete(DeleteBehavior.Cascade);
+            // 1. Cấu hình quan hệ Host - Promotion (Giữ nguyên hoặc sửa nhẹ)
+            modelBuilder.Entity<Promotion>(entity =>
+            {
+                entity.HasOne(p => p.Host)
+                      .WithMany(h => h.Promotions) // Đảm bảo trong HostProfile có: public virtual List<Promotion> Promotions { get; set; }
+                      .HasForeignKey(p => p.HostId)
+                      .OnDelete(DeleteBehavior.SetNull); // Khuyên dùng SetNull để nếu Host bị xóa, lịch sử mã giảm giá vẫn còn trong DB để đối soát (Audit)
+            });
+
+            // 2. Cấu hình bắt buộc cho bảng trung gian (BỔ SUNG MỚI)
+            modelBuilder.Entity<WorkSpacePromotion>()
+                .HasKey(wp => new { wp.WorkSpaceId, wp.PromotionId });
+
+            modelBuilder.Entity<WorkSpacePromotion>()
+                .HasOne(wp => wp.WorkSpace)
+                .WithMany(w => w.WorkSpacePromotions)
+                .HasForeignKey(wp => wp.WorkSpaceId);
+
+            modelBuilder.Entity<WorkSpacePromotion>()
+                .HasOne(wp => wp.Promotion)
+                .WithMany(p => p.WorkSpacePromotions)
+                .HasForeignKey(wp => wp.PromotionId);
             modelBuilder.Entity<Amenity>().HasMany(a => a.WorkspaceRoomAmenities).WithOne(wra => wra.Amenity).HasForeignKey(wra => wra.AmenityId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<BlockedTimeSlot>().HasOne(bts => bts.WorkSpaceRoom).WithMany(wr => wr.BlockedTimeSlots).HasForeignKey(bts => bts.WorkSpaceRoomId).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<Notification>(entity =>
