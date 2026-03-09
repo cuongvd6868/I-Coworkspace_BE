@@ -1,4 +1,5 @@
-﻿using Domain.Entities;
+﻿using Application.DTOs.WorkSpaceRoom;
+using Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -23,6 +24,7 @@ namespace Application.DTOs.WorkSpace
         //image
         public List<string> ImageUrls { get; set; } = new();
         //rooms
-        public List<WorkSpaceRoom> WorkSpaceRooms { get; set; } = new();
+        // Trong file Application/DTOs/WorkSpace/WorkSpaceResponseDto.cs
+        public List<WorkSpaceRoomResponseDto> WorkSpaceRooms { get; set; } = new();
     }
 }

@@ -87,6 +87,10 @@ builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<IPromotionRepository, PromotionRepository>();
 builder.Services.AddScoped<ISupportRepository, SupportRepository>();
 builder.Services.AddScoped<IChatRepository, ChatRepository>();
+builder.Services.AddScoped<IBlockedTimeRepository, BlockedTimeRepository>();
+builder.Services.AddScoped<IWorkSpaceRoomRepository, WorkSpaceRoomRepository>();
+builder.Services.AddScoped<IBookingRepository, BookingRepository>();
+builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
 
 builder.Services.AddScoped<ITokenService, TokenService>();
@@ -97,8 +101,10 @@ builder.Services.AddScoped<INotificationService, NotificationService>();
 builder.Services.AddScoped<IPromotionService, PromotionService>();
 builder.Services.AddScoped<ISupportService, SupportService>();
 builder.Services.AddScoped<IChatService, ChatService>();
-//builder.Services.AddScoped<IAIService, AIService>();
 builder.Services.AddHttpClient<IAIService, AIService>();
+builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<IWorkSpaceRoomService, WorkSpaceRoomService>();
+builder.Services.AddScoped<IReviewService, ReviewService>();
 
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddScoped<ISendMailService, SendMailService>();

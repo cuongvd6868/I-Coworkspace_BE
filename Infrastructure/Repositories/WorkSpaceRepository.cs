@@ -39,7 +39,7 @@ namespace Infrastructure.Repositories
                 .Include(w => w.WorkSpaceType)
                 .Include(w => w.WorkSpaceRooms)
                     .ThenInclude(r => r.WorkSpaceRoomAmenities)
-                        .ThenInclude(ra => ra.Amenity) // Lấy tên tiện ích (Wifi, Máy chiếu...)
+                        .ThenInclude(ra => ra.Amenity) 
                 .Where(w => w.IsActive)
                 .ToListAsync();
         }
@@ -85,9 +85,28 @@ namespace Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task UpdateWorkSpaceAsync(WorkSpace workSpace)
+        public async Task UpdateWorkSpaceAsync(WorkSpace updatedEntity, List<string> newImageUrls)
         {
-            _context.WorkSpaces.Update(workSpace);
+            var existingWorkSpace = await _context.WorkSpaces
+                .Include(w => w.WorkSpaceImages)
+                .FirstOrDefaultAsync(w => w.Id == updatedEntity.Id);
+
+            if (existingWorkSpace == null) return;
+
+            _context.Entry(existingWorkSpace).CurrentValues.SetValues(updatedEntity);
+
+            // 3. Cập nhật danh sách ảnh (Xóa sạch cũ - Thêm mới)
+            if (newImageUrls != null)
+            {
+                _context.WorkSpaceImages.RemoveRange(existingWorkSpace.WorkSpaceImages);
+
+                existingWorkSpace.WorkSpaceImages = newImageUrls.Select(url => new WorkSpaceImage
+                {
+                    ImageUrl = url,
+                    WorkSpaceId = existingWorkSpace.Id
+                }).ToList();
+            }
+
             await _context.SaveChangesAsync();
         }
 
