@@ -17,7 +17,6 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// --- 1. CONFIG SERVICES ---
 
 builder.Services.AddControllers()
     .AddJsonOptions(opt =>
@@ -62,7 +61,6 @@ builder.Services.AddAuthentication(options =>
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:SigningKey"]))
     };
 
-    // QUAN TRỌNG: Cấu hình để SignalR lấy Token từ Query String
     options.Events = new JwtBearerEvents
     {
         OnMessageReceived = context =>
@@ -92,7 +90,6 @@ builder.Services.AddScoped<IWorkSpaceRoomRepository, WorkSpaceRoomRepository>();
 builder.Services.AddScoped<IBookingRepository, BookingRepository>();
 builder.Services.AddScoped<IReviewRepository, ReviewRepository>();
 
-
 builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IWorkSpaceFavoriteService, WorkSpaceFavoriteService>();
@@ -104,8 +101,8 @@ builder.Services.AddScoped<IChatService, ChatService>();
 builder.Services.AddHttpClient<IAIService, AIService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<IWorkSpaceRoomService, WorkSpaceRoomService>();
+builder.Services.AddScoped<IWorkSpaceService, WorkSpaceService>();
 builder.Services.AddScoped<IReviewService, ReviewService>();
-
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 builder.Services.AddScoped<ISendMailService, SendMailService>();
 
@@ -115,14 +112,13 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowAll", policy =>
     {
-        policy.WithOrigins("http://localhost:3000") // Thay bằng URL React của bạn
+        policy.WithOrigins("http://localhost:3000") 
               .AllowAnyHeader()
               .AllowAnyMethod()
-              .AllowCredentials(); // Bắt buộc cho SignalR
+              .AllowCredentials(); 
     });
 });
 
-// --- 2. CONFIG PIPELINE (THỨ TỰ RẤT QUAN TRỌNG) ---
 
 var app = builder.Build();
 
@@ -133,7 +129,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// CORS phải đặt TRƯỚC Routing và Auth
 app.UseCors("AllowAll");
 
 app.UseRouting();
@@ -141,17 +136,22 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Đăng ký các Hub và Controller
 app.MapHub<SupportHub>("/hub/support");
 app.MapHub<ChatHub>("/hub/chat");
 app.MapControllers();
 
 app.Run();
 
-// OData Model
 static IEdmModel GetEdmModel()
 {
     var builder = new ODataConventionModelBuilder();
-    // builder.EntitySet<WorkSpace>("WorkSpaces");
+
+    builder.EntitySet<WorkSpace>("WorkSpaces");
+    builder.EntitySet<WorkSpaceRoom>("WorkSpaceRooms");
+    builder.EntitySet<WorkSpaceImage>("WorkSpaceImages");
+    builder.EntitySet<WorkSpaceRoomImage>("WorkSpaceRoomImages");
+    builder.EntitySet<WorkSpaceRoomAmenity>("WorkSpaceRoomAmenities");
+    builder.EntitySet<Amenity>("Amenities");
+
     return builder.GetEdmModel();
 }

@@ -30,7 +30,7 @@ namespace Infrastructure.Repositories
         {
             return await _context.WorkSpaceRooms
                 .Include(r => r.WorkSpaceRoomImages)
-                .AsNoTracking() // Tối ưu hiệu năng cho việc đọc
+                .AsNoTracking() 
                 .ToListAsync();
         }
 

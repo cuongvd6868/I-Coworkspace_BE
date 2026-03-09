@@ -83,17 +83,14 @@ namespace Infrastructure.Services
             var booking = await _bookingRepo.GetByIdAsync(id);
             if (booking == null || booking.CustomerId != userId) return false;
 
-            // 1. Cập nhật trạng thái Booking thành Cancelled (Giả sử ID = 3)
             booking.BookingStatusId = 3;
 
-            // 2. Tìm Blocked Slot tương ứng để xóa
             var blockSlot = await _blockedRepo.GetByReasonAsync(booking.BookingCode);
             if (blockSlot != null)
             {
                 _blockedRepo.Delete(blockSlot);
             }
 
-            // 3. Lưu tất cả thay đổi (Atomic Transaction)
             await _bookingRepo.SaveChangesAsync();
             return true;
         }

@@ -44,7 +44,7 @@ namespace Infrastructure.Repositories
                     && p.StartDate <= now
                     && p.EndDate >= now
                     && (p.UsageLimit == 0 || p.UsedCount < p.UsageLimit)
-                    // Logic: Mã Admin (HostId null) HOẶC Mã Owner có liên kết với WorkspaceId này
+                    // Mã Admin (HostId null) HOẶC Mã Owner có liên kết với WorkspaceId này
                     && (p.HostId == null || p.WorkSpacePromotions.Any(wp => wp.WorkSpaceId == workspaceId)));
         }
 

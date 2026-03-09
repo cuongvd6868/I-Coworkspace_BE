@@ -95,7 +95,6 @@ namespace Infrastructure.Repositories
 
             _context.Entry(existingWorkSpace).CurrentValues.SetValues(updatedEntity);
 
-            // 3. Cập nhật danh sách ảnh (Xóa sạch cũ - Thêm mới)
             if (newImageUrls != null)
             {
                 _context.WorkSpaceImages.RemoveRange(existingWorkSpace.WorkSpaceImages);
