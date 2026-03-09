@@ -20,12 +20,10 @@ namespace Application.Mappings
                 SenderRole = entity.SenderRole,
                 SenderId = entity.SenderId,
                 WorkSpaceId = entity.WorkSpaceId,
-                // Lấy Title từ Navigation Property nếu đã được Include trong Repository
                 WorkSpaceTitle = entity.WorkSpace?.Title
             };
         }
 
-        // Hàm hỗ trợ map danh sách thông báo
         public static IEnumerable<NotificationResponseDto> ToDtoList(this IEnumerable<Notification> entities)
         {
             return entities.Select(e => e.ToDto());

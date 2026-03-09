@@ -19,7 +19,6 @@ namespace Application.Mappings
                 Area = entity.Area,
                 IsActive = entity.IsActive,
 
-                // Map danh sách ảnh
                 Images = entity.WorkSpaceRoomImages?.Select(img => new WorkSpaceRoomImageDto
                 {
                     Id = img.Id,
@@ -27,7 +26,6 @@ namespace Application.Mappings
                     Caption = img.Caption
                 }).ToList() ?? new(),
 
-                // Map danh sách tên tiện ích (lấy từ bảng Amenity thông qua bảng trung gian)
                 Amenities = entity.WorkSpaceRoomAmenities?
                     .Where(ra => ra.Amenity != null)
                     .Select(ra => ra.Amenity!.Name)
@@ -47,12 +45,10 @@ namespace Application.Mappings
                 Capacity = dto.Capacity,
                 Area = dto.Area,
                 IsActive = true,
-                // Map Images
                 WorkSpaceRoomImages = dto.ImageUrls?.Select(url => new WorkSpaceRoomImage
                 {
                     ImageUrl = url
                 }).ToList() ?? new(),
-                // Map Amenities
                 WorkSpaceRoomAmenities = dto.AmenityIds?.Select(id => new WorkSpaceRoomAmenity
                 {
                     AmenityId = id

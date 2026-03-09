@@ -11,7 +11,6 @@ namespace Infrastructure.Hubs
     [Authorize]
     public class ChatHub : Hub
     {
-        // Khi người dùng mở hộp chat, họ sẽ join vào "phòng" riêng của cuộc hội thoại đó
         public async Task JoinConversation(int conversationId)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, $"Chat_{conversationId}");

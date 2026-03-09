@@ -18,17 +18,6 @@ namespace Infrastructure.Services
             _httpClient = httpClient;
             _apiKey = configuration["Gemini:ApiKey"] ?? "";
             _workspaceRepo = workspaceRepo;
-
-            // Log ra Console để kiểm tra (chỉ dùng khi debug)
-            if (string.IsNullOrEmpty(_apiKey))
-            {
-                Console.WriteLine("DEBUG: >>> KHÔNG tìm thấy ApiKey trong appsettings.json! <<<");
-            }
-            else
-            {
-                // Chỉ in ra 4 ký tự đầu để bảo mật nếu bạn đang share màn hình
-                Console.WriteLine($"DEBUG: >>> Đã lấy được ApiKey: {_apiKey.Substring(0, Math.Min(4, _apiKey.Length))}... <<<");
-            }
         }
 
         public async Task<string> GetAIResponseAsync(string userPrompt)

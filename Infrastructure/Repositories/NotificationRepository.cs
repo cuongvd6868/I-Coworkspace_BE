@@ -23,12 +23,12 @@ namespace Infrastructure.Repositories
                 .FirstOrDefaultAsync(n => n.Id == id);
         }
 
-        // Logic quan trọng: Lọc thông báo dựa trên danh sách Workspace người dùng quan tâm
+        // Lọc thông báo dựa trên danh sách Workspace người dùng quan tâm
         public async Task<IEnumerable<Notification>> GetNotificationsForUserAsync(List<int> favoriteWorkspaceIds)
         {
             return await _context.Notifications
                 .Where(n => n.WorkSpaceId == null || favoriteWorkspaceIds.Contains(n.WorkSpaceId.Value))
-                .OrderByDescending(n => n.CreatedAt) // Sắp xếp mới nhất lên đầu
+                .OrderByDescending(n => n.CreatedAt) 
                 .ToListAsync();
         }
 

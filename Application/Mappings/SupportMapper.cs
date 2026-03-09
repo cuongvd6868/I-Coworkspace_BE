@@ -11,7 +11,7 @@ public static class SupportMapper
             Subject = entity.Subject,
             Message = entity.Message,
             Status = entity.Status.ToString(),
-            CreatedAt = entity.CreatedAt, // <--- Bổ sung trường này
+            CreatedAt = entity.CreatedAt, 
             SubmittedByUserName = entity.SubmittedByUser?.UserName ?? "Customer",
             Replies = entity.Replies?.Select(r => r.ToDto()).OrderBy(r => r.CreatedAt).ToList() ?? new()
         };

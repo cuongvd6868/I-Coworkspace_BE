@@ -21,7 +21,6 @@ namespace WebApi.Controllers
             _logger = logger;
         }
 
-        // --- DÀNH CHO NGƯỜI DÙNG (GUEST/OWNER) ---
 
         [HttpPost("tickets")]
         public async Task<IActionResult> CreateTicket([FromBody] CreateTicketRequest request)
@@ -54,7 +53,6 @@ namespace WebApi.Controllers
             }
         }
 
-        // --- DÀNH CHO NHÂN VIÊN (STAFF/ADMIN) ---
 
         [HttpGet("all-tickets")]
         [Authorize(Roles = "Staff,Admin")]

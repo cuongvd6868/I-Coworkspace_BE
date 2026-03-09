@@ -19,7 +19,6 @@ namespace Application.Mappings
 
         public static ConversationDto ToDto(this Conversation entity, string currentUserId)
         {
-            // Xác định ai là người đối diện
             var isCustomer = entity.CustomerId == currentUserId;
             var otherUser = isCustomer ? entity.Owner : entity.Customer;
 
@@ -29,7 +28,6 @@ namespace Application.Mappings
                 OtherUserId = otherUser?.Id ?? "",
                 OtherUserName = otherUser?.UserName ?? "Unknown",
                 LastMessageAt = entity.LastMessageAt,
-                // Lấy tin nhắn cuối cùng nếu có
                 LastMessage = entity.Messages.OrderByDescending(m => m.SentAt).FirstOrDefault()?.Message ?? ""
             };
         }
