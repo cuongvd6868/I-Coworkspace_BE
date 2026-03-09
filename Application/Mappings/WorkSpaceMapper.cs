@@ -44,6 +44,39 @@ namespace Application.Mappings
                 //            }).ToList() ?? new List<string>()
 
             };
+
+
+        }
+
+        public static WorkSpace ToEntity(this WorkSpaceCreateRequest dto)
+        {
+            var workspace = new WorkSpace
+            {
+                Title = dto.Title,
+                Description = dto.Description,
+                HostId = dto.HostId,
+                AddressId = dto.AddressId,
+                WorkSpaceTypeId = dto.WorkSpaceTypeId,
+                IsActive = true,
+                // Map ảnh Workspace
+                WorkSpaceImages = dto.ImageUrls?.Select(url => new WorkSpaceImage { ImageUrl = url }).ToList() ?? new(),
+
+                // Map danh sách phòng (Deep Insert)
+                WorkSpaceRooms = dto.Rooms?.Select(r => new WorkSpaceRoom
+                {
+                    Title = r.Title,
+                    Description = r.Description,
+                    WorkSpaceRoomTypeId = r.WorkSpaceRoomTypeId,
+                    PricePerHour = r.PricePerHour,
+                    Capacity = r.Capacity,
+                    Area = r.Area,
+                    IsActive = true,
+                    // Nếu trong CreateWorkSpaceRoomRequest có ImageUrls/AmenityIds, map tiếp tại đây
+                    WorkSpaceRoomImages = r.ImageUrls?.Select(url => new WorkSpaceRoomImage { ImageUrl = url }).ToList() ?? new(),
+                    WorkSpaceRoomAmenities = r.AmenityIds?.Select(id => new WorkSpaceRoomAmenity { AmenityId = id }).ToList() ?? new()
+                }).ToList() ?? new()
+            };
+            return workspace;
         }
     }
 }

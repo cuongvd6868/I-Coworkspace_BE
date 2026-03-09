@@ -13,7 +13,7 @@ namespace Domain.Interfaces
         Task<IEnumerable<WorkSpace>> GetWorkSpacesByLocationAsync(string location);
         Task<IEnumerable<WorkSpace>> GetFavoriteWorkSpacesAsync(string userId);
         Task AddWorkSpaceAsync(WorkSpace workSpace);
-        Task UpdateWorkSpaceAsync(WorkSpace workSpace);
+        Task UpdateWorkSpaceAsync(WorkSpace updatedEntity, List<string> newImageUrls);
         Task DeleteWorkSpaceAsync(int id);
         Task<bool> IsOwnerOfWorkspaceAsync(int hostId, int workspaceId);
 
